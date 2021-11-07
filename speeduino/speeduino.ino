@@ -1,23 +1,10 @@
 /*
-Speeduino - Simple engine management for the Arduino Mega 2560 platform
-Copyright (C) Josh Stewart
+Tonyukuk deneme
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,la
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 /** @file
- * Speeduino initialization and main loop.
+ * Tonyukuk initialization and main loop.
  */
 #include <stdint.h> //developer.mbed.org/handbook/C-Data-Types
 //************************************************
@@ -89,7 +76,7 @@ void setup()
   initialisationComplete = false; //Tracks whether the initialiseAll() function has run completely
   initialiseAll();
 }
-/** Speeduino main loop.
+/** Tonyukuk main loop.
  * 
  * Main loop chores (roughly in  order they are preformed):
  * - Check if serial comms or tooth logging are in progress (send or reveive, prioritize communication)
