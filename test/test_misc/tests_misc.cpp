@@ -1,10 +1,9 @@
 #include <Arduino.h>
 #include <unity.h>
 
-#include "tests_corrections.h"
 #include "tests_init.h"
 #include "tests_tables.h"
-#include "tests_PW.h"
+#include "test_table2d.h"
 
 #define UNITY_EXCLUDE_DETAILS
 
@@ -19,9 +18,8 @@ void setup()
     UNITY_BEGIN();    // IMPORTANT LINE!
 
     testInitialisation();
-    testCorrections();
-    testPW();
     testTables();
+    testTable2d();
 
     UNITY_END(); // stop unit testing
 }

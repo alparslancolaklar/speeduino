@@ -2,27 +2,37 @@
  * @brief File for generating log files and meta data
  * @author Josh Stewart
  * 
- * This file contains functions for creating a log file for use eith by TunerStudio directly or to be written to an SD card
+ * This file contains functions for creating a log file for use with by TunerStudio directly or to be written to an SD card
  * 
  */
 
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include <assert.h>
+
 #ifndef UNIT_TEST // Scope guard for unit testing
-  #define LOG_ENTRY_SIZE      121 /**< The size of the live data packet. This MUST match ochBlockSize setting in the ini file */
-  #define SD_LOG_ENTRY_SIZE   121 /**< The size of the live data packet used by the SD car.*/
-  #define SD_LOG_NUM_FIELDS   88 /**< The number of fields that are in the log. This is always smaller than the entry size due to some fields being 2 bytes */
+  #define LOG_ENTRY_SIZE      125 /**< The size of the live data packet. This MUST match ochBlockSize setting in the ini file */
+  #define SD_LOG_ENTRY_SIZE   125 /**< The size of the live data packet used by the SD card.*/
 #else
   #define LOG_ENTRY_SIZE      1 /**< The size of the live data packet. This MUST match ochBlockSize setting in the ini file */
-  #define SD_LOG_ENTRY_SIZE   1 /**< The size of the live data packet used by the SD car.*/
+  #define SD_LOG_ENTRY_SIZE   1 /**< The size of the live data packet used by the SD card.*/
 #endif
 
-byte getTSLogEntry(uint16_t);
-int16_t getReadableLogEntry(uint16_t);
-bool is2ByteEntry(uint8_t);
+#define SD_LOG_NUM_FIELDS   90 /**< The number of fields that are in the log. This is always smaller than the entry size due to some fields being 2 bytes */
 
-extern const byte PROGMEM fsIntIndex[34];
+byte getTSLogEntry(uint16_t byteNum);
+int16_t getReadableLogEntry(uint16_t logIndex);
+#if FPU_MAX_SIZE >= 32
+  float getReadableFloatLogEntry(uint16_t logIndex);
+#endif
+bool is2ByteEntry(uint8_t key);
+
+// This array indicates which index values from the log are 2 byte values
+// This array MUST remain in ascending order
+// !!!! WARNING: If any value above 255 is required in this array, changes MUST be made to is2ByteEntry() function !!!!
+const byte PROGMEM fsIntIndex[] = {4, 14, 17, 22, 26, 28, 33, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 76, 78, 80, 82, 86, 88, 90, 93, 95, 99, 104, 111, 121 };
+
 //List of logger field names. This must be in the same order and length as logger_updateLogdataCSV()
 const char header_0[] PROGMEM = "secl";
 const char header_1[] PROGMEM = "status1";
@@ -112,9 +122,9 @@ const char header_84[] PROGMEM = "Advance 1";
 const char header_85[] PROGMEM = "Advance 2";
 const char header_86[] PROGMEM = "SD Status";
 const char header_87[] PROGMEM = "EMAP";
+const char header_88[] PROGMEM = "Fan Duty";
+const char header_89[] PROGMEM = "AirConStatus";
 /*
-const char header_88[] PROGMEM = "";
-const char header_89[] PROGMEM = "";
 const char header_90[] PROGMEM = "";
 const char header_91[] PROGMEM = "";
 const char header_92[] PROGMEM = "";
@@ -237,9 +247,9 @@ const char* const header_table[] PROGMEM = {  header_0,\
                                               header_85,\
                                               header_86,\
                                               header_87,\
-                                              /*
                                               header_88,\
                                               header_89,\
+                                              /*
                                               header_90,\
                                               header_91,\
                                               header_92,\
@@ -274,5 +284,7 @@ const char* const header_table[] PROGMEM = {  header_0,\
                                               header_121,\
                                               */
                                             };
+
+static_assert(sizeof(header_table) == (sizeof(char*) * SD_LOG_NUM_FIELDS), "Number of header table titles must match number of log fields");
 
 #endif
